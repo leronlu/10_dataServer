@@ -107,8 +107,11 @@ G500Bridge──→ pub ──→ QTServer
 
 **硬约束：X86 环境必须从 `build/` 目录执行程序**，因为 `#ifdef X86_BUILD` 下配置文件路径为 `../conf/`，该相对路径依赖于 `build/` 作为当前工作目录。
 
+**单进程约束：本项目只能有一个进程实例运行**。启动新程序前必须先 kill 旧进程，否则端口绑定（ZMQ 5561-5564）和 IPC 资源会冲突。
+
 ```bash
-cd build && ./data_server
+# 启动前先杀旧进程
+pkill -f data_server 2>/dev/null; cd build && ./data_server &
 ```
 
 | 环境 | 工作目录 | 配置路径 | 原因 |
@@ -117,6 +120,8 @@ cd build && ./data_server
 | ARM (Jetson) | 项目根目录 | `conf/` | 嵌入式部署 |
 
 在其他目录运行会导致配置文件加载失败，日志、ZMQ、ModBus 等模块无法正常初始化。
+
+运行程序时建议使用 `run_in_background: true`，避免阻塞交互。
 
 ## 关键依赖关系
 
