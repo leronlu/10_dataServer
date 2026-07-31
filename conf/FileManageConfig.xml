@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FileManageConfig>
+    <WaveFile enable="true" dir="/mnt/wavedata/" namePrefilx="" fileSize="" maxnum="20">
+        <spontReport>false</spontReport>                                 <!--突发上报-->
+    </WaveFile>
+    <WebWaveFile enable="true" dir="/mnt/webwavedata/" namePrefilx="" fileSize="" maxnum="20">
+        <spontReport>true</spontReport>                                 <!--突发上报-->
+    </WebWaveFile>
+    <SoeFile enable="true" dir="/mnt/files/" namePrefix="S" fileSize="64000" maxnum="5">
+        <synchNum>10</synchNum>
+        <spontReport>true</spontReport>
+        <typeList>
+            <type>30</type>                                        <!--单点-->
+            <type>31</type>                                        <!--双点-->
+            <!--<type value="35" />-->                                        <!--标度化遥测值-->
+        </typeList>
+    </SoeFile>
+    <AnalogFile enable="false" dir="/mnt/files/" namePrefix="A" fileSize="64000" maxnum="5">
+        <synchNum>10</synchNum>                                        <!---->
+        <spontReport>true</spontReport>
+        <savePeriod>60</savePeriod>                                    <!--存储周期-->
+        <addrList>
+            <addr>1</addr>                                  <!--遥测地址表-->
+            <addr>2</addr>
+        </addrList>
+    </AnalogFile>
+    <ErrReportFile enable="false" dir="/mnt/files/" namePrefix="E" fileSize="64000" maxnum="5">
+        <synchNum>10</synchNum>
+        <spontReport>true</spontReport>
+    </ErrReportFile>
+	<VideoFile enable="true" dir="./snapshot/" namePrefix="2" fileSize="64000" maxnum="5">
+        <spontReport>false</spontReport>
+    </VideoFile>
+</FileManageConfig>

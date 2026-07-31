@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<InnerCommConfig>
+    <ControlDirection>
+        <Module id="1">IEC104</Module>
+        <Module id="2">IEC101</Module>
+        <Module id="3">TestModule</Module>
+        <Module id="4">UartLCD</Module>
+        <Module id="5">WebServer</Module>
+		<Module id="6">DataBase</Module>
+		<Module id="7">ModBusSev</Module>
+		<Module id="8">JCWLogical</Module>
+		<Module id="9">VideoFusion</Module>
+		<Module id="10">JMPGEncode</Module>
+		<Module id="11">EncodeH264</Module>
+		<Module id="12">VideoWeb</Module>
+    </ControlDirection>
+    <DataCollection>
+        <Module id="1">DOWNSIDE</Module>
+    </DataCollection>
+    <Comm table="1" enable="true" M1="IEC104" M2="DOWNSIDE">
+        <disableList>
+            <type_xx>0x8c</type_xx>
+        </disableList>
+    </Comm>
+    <Comm table="2" enable="true" M1="IEC101" M2="DOWNSIDE" />
+    <Comm table="3" enable="true" M1="TestModule" M2="DOWNSIDE" />
+    <Comm table="4" enable="true" M1="UartLCD" M2="DOWNSIDE" />
+    <Comm table="5" enable="true" M1="WebServer" M2="DOWNSIDE"/>
+	<Comm table="6" enable="true" M1="DataBase" M2="DOWNSIDE"/>
+	<Comm table="7" enable="true" M1="ModBusSev" M2="DOWNSIDE"/>
+	<Comm table="8" enable="true" M1="JCWLogical" M2="DOWNSIDE"/>
+	<Comm table="9" enable="true" M1="VideoFusion" M2="DOWNSIDE"/>
+	<Comm table="10" enable="true" M1="JMPGEncode" M2="DOWNSIDE"/>
+	<Comm table="11" enable="true" M1="EncodeH264" M2="DOWNSIDE"/>
+	<Comm table="12" enable="true" M1="VideoWeb" M2="DOWNSIDE"/>
+</InnerCommConfig>

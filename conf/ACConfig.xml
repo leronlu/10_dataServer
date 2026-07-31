@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ACConfig>
+	<beamEnable>false</beamEnable>
+	<wavType>32</wavType>
+	<streamProc>0</streamProc>
+	<connect enable="true" ip="192.168.1.222" port="8888" netNum="3" timeOut="3" TestMode="false" />
+	
+	<pwmFilePath>/sys/class/pwm/pwmchip0/pwm2/duty_cycle</pwmFilePath>
+	
+	<tempFilePath>/sys/devices/virtual/thermal/thermal_zone0/temp</tempFilePath>
+	
+    <PollingTime>1</PollingTime>
+	
+    <AckSendTime>200</AckSendTime>
+    <!--Modubus应答延时发送插入帧时间 毫秒-->
+    <ReceiveOverTime>1</ReceiveOverTime>
+    <!--Modubus客户端抄表的接收超时时间秒-->
+    <YkOverTime>5</YkOverTime>
+    <!--Modubus客户端遥控执行命令的超时时间 秒-->
+
+    <DelaySend>2</DelaySend>
+    <!--请求帧延时发送-->
+	
+	<!-- 声音再空气中传播的阻抗-->
+	<Impedance>400</Impedance>
+	
+	<!-- 参考声压平方 20E-6 -->
+	<referencePressure>20</referencePressure>
+	
+	<!--传感器数目 须与readData中yx yc数目一致 -->
+	<SersorNum>128</SersorNum>
+	
+	<!-- FFT计算长度 -->
+	<FFTLen>256</FFTLen>
+	
+	<!-- 声音采样率 -->
+	<SoundFs>96000</SoundFs>
+	
+	<!-- 传感器故障检测的最低声压级 -->
+	<FaultDetectMinSound>20</FaultDetectMinSound>
+	
+	<!-- 传感器故障检测的 偏差百分比 -->
+	<FaultDetectPerAge>50</FaultDetectPerAge>
+
+    <CommunicateStatReport enable="true" trytimes="3"/>
+    <!--通信状态上报-->
+
+    <BaseAddr>
+        <!--relate:相对前一个下行模块偏移,absolute:绝对地址相对于上行协议配置基址偏移-->
+        <YxBaseAddr type="relate">0</YxBaseAddr>
+        <YkBaseAddr type="relate">0</YkBaseAddr>
+    </BaseAddr>
+    <parseMode>1</parseMode>
+  
+	<dataMsg>
+		<frame type="readData">
+			<data regIndex="1 " len="0x01" type="yx1"  defaultValue="0x00" repeat="128" desc="MP Status" />
+			<data regIndex="129" len="0x02" type="yc" defaultValue="60" repeat="1" desc="rainbow dot max" />
+			<data regIndex="130" len="0x02" type="yc" defaultValue="59" repeat="1" desc="rainbow dot min" />
+			<data regIndex="131" len="0x02" type="yc" defaultValue="1400" repeat="1" desc="capacity" />
+			<data regIndex="132" len="0x02" type="yc1" defaultValue="0x00" repeat="128" desc="MP1  Sound Pressure Level" />
+			<data regIndex="133" len="0x02" type="yc" defaultValue="40" repeat="1" desc="cpu temp" />
+		</frame>
+		
+		<frame type="readParam">
+			<data regIndex="6" value="0x00000000" type="INT32U" qpm="126" />
+			<data regIndex="7" value="0x00000001" type="INT32U" qpm="127"  />
+			<data regIndex="8" value="0x00000002" type="INT32U" qpm="128" />
+			<data regIndex="9" value="0x00000003" type="INT32U" qpm="129"  />
+			<data regIndex="10" value="0x00000004" type="INT32U" qpm="130" />
+			<data regIndex="11" value="0x00000005" type="INT32U" qpm="131"  />
+			<data regIndex="12" value="0x00000006" type="INT32U" qpm="132" />
+			<data regIndex="13" value="0x00000007" type="INT32U" qpm="133"  />
+			<data regIndex="14" value="0x00000008" type="INT32U" qpm="134" />
+			<data regIndex="15" value="0x00000009" type="INT32U" qpm="135"  />
+		</frame>
+	</dataMsg>
+	
+</ACConfig>

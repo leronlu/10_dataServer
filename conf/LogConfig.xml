@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogConfig isManul="true">
+    <!--false:调用log4cpp.properties, true:使用manul加载本文件中的配置-->
+    <LogPrintLV>0</LogPrintLV>
+    <!--调试信息打印输出等级-->
+    <LogWriteLV>1</LogWriteLV>
+    <!--调试信息日志存储等级-->
+    <LogWriteEnable>true</LogWriteEnable>
+    <!--日志写文件使能-->
+    <LogSocketEnable>true</LogSocketEnable>
+    <!--socket输出使能-->
+    <CategorySocket>
+        <port>5590</port>
+    </CategorySocket>
+    <PrintAppender>
+        <layout>%d (%p) %x: %m%n</layout>
+    </PrintAppender>
+    <RollingFileAppender>
+        <fileName>/home/lw/WORK_Claude/07_StreamServerLite/ffmpegRtspServer/03_dataServer/log/log</fileName>
+        <maxFileSize>2097152</maxFileSize>
+        <maxBackupIndex>30</maxBackupIndex>
+        <layout>%d (%p) %x: %m%n</layout>
+    </RollingFileAppender>
+    <SyslogAppender>
+        <fileName>/home/lw/WORK_Claude/07_StreamServerLite/ffmpegRtspServer/03_dataServer/log/syslog.log</fileName>
+        <maxFileSize>2097152</maxFileSize>
+        <maxBackupIndex>10</maxBackupIndex>
+        <priority>400</priority>
+        <layout>%d (%p) %x: %m%n</layout>
+    </SyslogAppender>
+    <SyslogAppender>
+        <fileName>/home/lw/WORK_Claude/07_StreamServerLite/ffmpegRtspServer/03_dataServer/log/down.log</fileName>
+        <maxFileSize>2097152</maxFileSize>
+        <maxBackupIndex>5</maxBackupIndex>
+        <priority>33368</priority>
+        <maxPriority>33368</maxPriority>
+        <layout>%d (%p) %x: %m%n</layout>
+    </SyslogAppender>
+    <!--Filter 允许包含关键字的语句输出, enable=false时所有调试信息均被输出, 最大允许10个关键字-->
+    <Filter enable="false">
+        <KeyWord word="mModbus"/>
+        <KeyWord word="ModBus"/>
+    </Filter>
+    <!--Forbidden 禁止包含关键字的语句输出, enable=false屏蔽不起作用-->
+    <Forbidden enable="false">
+        <KeyWord word="MsgManage"/>
+    </Forbidden>
+</LogConfig>

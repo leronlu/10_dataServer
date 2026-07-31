@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModBusMasterConfig>
+    <Serial>
+        <Port>4</Port>
+        <!--0/1/2/3-->
+        <BaudRate>9600</BaudRate>
+        <DataBits>8</DataBits>
+        <!--7/8-->
+        <Parity>none</Parity>
+        <!--none/odd/even/space-->
+        <StopBits>1</StopBits>
+        <!--1/2-->
+    </Serial>
+    <PollingTime>1000</PollingTime>
+    <!--轮询时间毫秒-->
+    <AckSendTime>300</AckSendTime>
+    <!--Modubus应答延时发送插入帧时间 毫秒-->
+    <ReceiveOverTime>2</ReceiveOverTime>
+    <!--Modubus客户端抄表的接收超时时间秒-->
+    <YkOverTime>5</YkOverTime>
+    <!--Modubus客户端遥控执行命令的超时时间 秒-->
+    <YcCheckDelay>4</YcCheckDelay>
+    <!--遥测SOE上传检测间隔时间-->
+    <DelaySend>2</DelaySend>
+    <!--请求帧延时发送-->
+    <SetYcTHV>false</SetYcTHV>
+    <!--是否进行遥测THV设置,为true则其基址排在写寄存器之后-->
+    <TimeSetPeriod>60</TimeSetPeriod>
+    <!--时间同步周期-->
+    <BocastUpdateOverTime>200</BocastUpdateOverTime>
+    <!--广播升级帧间延时-->
+    <CommunicateStatReport enable="true" trytimes="4"/>
+    <!--通信状态上报-->
+	<ReadFileLengthReduce>1</ReadFileLengthReduce>
+	<!--兼容2.99非标准读文件协议帧-->
+    <BaseAddr>
+        <!--relate:相对前一个下行模块偏移,absolute:绝对地址相对于上行协议配置基址偏移-->
+        <YxBaseAddr type="relate">0</YxBaseAddr>
+        <YcBaseAddr type="relate">0</YcBaseAddr>
+        <YkBaseAddr type="relate">0</YkBaseAddr>
+        <YtBaseAddr type="relate">0</YtBaseAddr>
+    </BaseAddr>
+    <parseMode>1</parseMode>
+    <!--非0：为光芒模式和数值  0：南凯模式-->
+    <FileManage enable="true">
+        <WaveFileData type="smaple">
+            <TOV>1</TOV>
+            <NOC>6</NOC>
+            <NOE>640</NOE>
+            <INT>2500</INT>
+            <IxFactor fstRated="1" sndRated="1" paramFactor="2507.6847198"/>
+            <UxFactor fstRated="1" sndRated="1" paramFactor="59.124279338"/>
+        </WaveFileData>
+        <WaveFileData type="rms">
+            <TOV>2</TOV>
+            <NOC>6</NOC>
+            <NOE>80</NOE>
+            <INT>20000</INT>
+            <IxFactor fstRated="1" sndRated="1" paramFactor="1000"/>
+            <UxFactor fstRated="1" sndRated="1" paramFactor="100"/>
+        </WaveFileData>
+    </FileManage>
+    <!--ReadRequest:轮询列表 WriteRequest:写列表-->
+    <!--data:以需求结果排列, regIndex:数据源序列号(在该回复帧中)-->
+    <!--THV:参数限值越限上报-->
+    <!--设备分为两种帧类型:ReadRequest(读请求帧),WriteRequest(写请求帧) ReadRequest: Modbus协议部分: funCode:功能码, startAddr:起始地址, regNum:寄存器数目 data: THV：用以限制SOE的产生 数据解析部分: 均将Modbus协议的应答帧的数据部分以字节流进行解析 type: 帧类型, 标示每个解析中的regIndex取数的意义，即解析的时候先将Modbus数据按对应帧类型的数据类型 生成该类型的数据数组，而regIndex为该数据数组的下标+1 singleYx: (数据类型：unsigned char 1个字节)，regIndex:数据单元数据流中序号, bitIndex:数据单元中位序号 doubleYx: (数据类型：unsigned char 1个字节)，onRegIndex:合数据单元在数据流中序号, onBitIndex:合位在数据单元中位序号 offRegIndex:分数据单元在数据流中序号, offBitIndex:分位在数据单元中位序号 yc: (数据类型：short 2个字节)，regIndex:数据单元在数据流中序号 ym: (数据类型：int 4个字节)，regIndex:数据单元在数据流中序号 param: (数据类型：short 2个字节)，regIndex:数据单元在数据流中序号 floatYc: (数据类型：float 4个字节)，regIndex:数据单元在数据流中序号 int32Yc: (数据类型：int 4个字节)，regIndex:数据单元在数据流中序号 WriteRequest: 在下发了写请求帧时需要立即读取操作的结果 readReqIdx:该读请求列表下的请求帧序号 yk: 只支持双点遥控 onAddr:合闸寄存器地址 onAction:合闸动作 offAddr:分闸寄存器地址 offAction:分闸动作 write: addr: 写寄存器地址, readDataIdx:该地址对应在读请求帧数据列表中的数据序号-->
+    <Template>
+        <Device>
+            <DeviceId>1</DeviceId>
+            <DeviceName>RTU</DeviceName>
+            <Factory>TOGEST</Factory>
+            <ReadRequest>
+                <frame type="singleYx" funCode="4" startAddr="0xA000" regNum="1">
+                <data bitIndex="1" THV="0" regIndex="1"/>
+                </frame>
+                <frame type="int32Yc" funCode="3" startAddr="0x4600" regNum="2">
+                <data regIndex="1" THV="5"/>
+                </frame>
+                <frame type="param" funCode="3" startAddr="0xC000" regNum="1">
+                <data regIndex="1" THV="5"/>
+                </frame>
+                <frame type="ym" funCode="3" startAddr="0x4400" regNum="2">
+                <data regIndex="1" THV="5"/>
+                </frame>
+                <frame type="mix" funCode="5A">
+                <subFrame type="singleYx" funCode="01" startAddr="0xA000" regNum="1">
+                    <data regIndex="1" THV="5"/>
+                </subFrame>
+                <subFrame type="doubleYx" funCode="02" startAddr="0xA000" regNum="1">
+                    <data regIndex="1" THV="5"/>
+                </subFrame>
+                <subFrame type="int32Yc" funCode="03" startAddr="0x4000" regNum="1">
+                    <data regIndex="1" THV="5"/>
+                </subFrame>
+                <subFrame type="param" funCode="04" startAddr="0xA000" regNum="1">
+                    <data regIndex="1" THV="5"/>
+                </subFrame>
+                <subFrame type="readErrReport" funCode="0x14" refType="0x06" fileNum="0x01" recordNum="0x01" recordLegth="0x16" startAddr="0" regNum="0"/>
+                <subFrame type="readDir" funCode="0x14" refType="0x06" fileNum="0x02" recordNum="0x01" recordLegth="0x0E" startAddr="0" regNum="0xDC"/>
+                </frame>
+            </ReadRequest>
+            <WriteRequest>
+                <frame type="yk" funCode="5" readFrameIdx="1">
+                    <reg onAddr="785" onAction="0xFF00" offAddr="785" offAction="0x0000"/>
+                </frame>
+                <frame type="write" funCode="6" readFrameIdx="7">
+                    <reg addr="15"/>
+                </frame>
+                <frame type="multiYk" funCode="16" readFrameIdx="1">
+                    <on startAddr="46359" num="3">
+                        <reg>510</reg>
+                        <reg>0</reg>
+                        <reg>1</reg>
+                    </on>
+                    <off startAddr="46359" num="3">
+                        <reg>765</reg>
+                        <reg>0</reg>
+                        <reg>1</reg>
+                    </off>
+                </frame>
+                <frame type="ykSelect" funCode="16" ykFrameIdx="1">
+                    <on startAddr="46359" num="3">
+                        <reg>510</reg>
+                        <reg>0</reg>
+                        <reg>1</reg>
+                    </on>
+                    <off startAddr="46359" num="3">
+                        <reg>765</reg>
+                        <reg>0</reg>
+                        <reg>1</reg>
+                    </off>
+                    <abort startAddr="46359" num="3">
+                        <reg>765</reg>
+                        <reg>0</reg>
+                        <reg>1</reg>
+                    </abort>
+                </frame>
+            </WriteRequest>
+        </Device>
+    </Template>
+    <Device>
+        <DeviceId>16</DeviceId>
+        <DeviceName>D1</DeviceName>
+        <Factory/>
+        <ReadRequest>
+			<frame type="doubleYx" funCode="02" startAddr="0x0000" regNum="3">
+				<data onBitIndex="1" onRegIndex="1" offBitIndex="2" offRegIndex="1"  THV="0"/>
+			</frame>
+			<frame type="singleYx" funCode="02" startAddr="0x0000" regNum="4">
+				<data bitIndex="3" THV="0" regIndex="1"/>
+			</frame>
+			<frame type="int32Yc" funCode="3" startAddr="0x4001" regNum="2">
+				<data regIndex="1" THV="5"/>
+				<data regIndex="2" THV="5"/>
+			</frame>
+        </ReadRequest>
+        <WriteRequest>
+			<frame type="yk" funCode="5" readFrameIdx="1">
+				<reg onAddr="24576" onAction="0xFF00" offAddr="24576" offAction="0x0000"/>
+			</frame>
+			<frame type="yk" funCode="5" readFrameIdx="1">
+				<reg onAddr="24577" onAction="0xFF00" offAddr="24577" offAction="0x0000"/>
+			</frame>
+			<frame type="yk" funCode="5" readFrameIdx="1">
+				<reg onAddr="24578" onAction="0xFF00" offAddr="24578" offAction="0x0000"/>
+			</frame>
+        </WriteRequest>
+		<ReadFileRequest>           
+        </ReadFileRequest>
+    </Device>
+</ModBusMasterConfig>

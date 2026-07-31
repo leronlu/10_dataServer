@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UpSideDataConfig>
+	<nodeList node="0" ip="192.168.1.138" enable="false">
+		<dataList type="singleyx">
+			<data addr="0"  mapaddr="0" num="130"/>
+		</dataList>	
+		<dataList type="doubleyx">
+			<data addr="0"  mapaddr="0" num="1"/>
+		</dataList>	
+		<dataList type="yk">
+			<data addr="0"  mapaddr="0" num="3"/>
+		</dataList>	
+		<dataList type="yc">
+			<data addr="0"  mapaddr="0" num="135"/>
+		</dataList>	
+		<dataList type="ym">
+			<data addr="0"  mapaddr="0" num="0"/>
+		</dataList>	
+		<dataList type="yt">
+			<data addr="0"  mapaddr="0" num="0"/>
+		</dataList>	
+		<dataList type="boardcmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>	
+		<dataList type="localcmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>	
+		<dataList type="cmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>
+	</nodeList>
+	<nodeList node="1" ip="192.168.6.199" enable="true">
+		<dataList type="singleyx">
+			<data addr="0"  mapaddr="20" num="20"/>
+		</dataList>	
+		<dataList type="doubleyx">
+			<data addr="0"  mapaddr="10" num="10"/>
+		</dataList>	
+		<dataList type="yk">
+			<data addr="0"  mapaddr="10" num="2"/>
+		</dataList>	
+		<dataList type="yc">
+			<data addr="0"  mapaddr="20" num="20"/>
+		</dataList>	
+		<dataList type="ym">
+			<data addr="0"  mapaddr="10" num="0"/>
+		</dataList>	
+		<dataList type="yt">
+			<data addr="0"  mapaddr="10" num="0"/>
+		</dataList>	
+		<dataList type="boardcmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>	
+		<dataList type="localcmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>	
+		<dataList type="cmd">
+			<data addr="0"  mapaddr="0" num="10"/>
+		</dataList>	
+	</nodeList>
+
+</UpSideDataConfig>

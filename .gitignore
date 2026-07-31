@@ -1,0 +1,26 @@
+# Build artifacts (keep CMakeLists.txt)
+build/*
+!build/CMakeLists.txt
+*.o
+*.a
+
+# Logs
+log/
+
+# Claude Code
+.claude/
+
+# IDE
+.idea
+.vscode
+
+# Runtime droppings
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.gitmodules
+.mcp.json
+.ripgreprc
