@@ -105,11 +105,18 @@ G500Bridge──→ pub ──→ QTServer
 
 ## 运行
 
+**硬约束：X86 环境必须从 `build/` 目录执行程序**，因为 `#ifdef X86_BUILD` 下配置文件路径为 `../conf/`，该相对路径依赖于 `build/` 作为当前工作目录。
+
 ```bash
 cd build && ./data_server
 ```
 
-程序需要 `conf/` 目录下的 XML 配置文件，路径在 `main.cpp` 中通过 `#ifdef X86_BUILD` 区分（X86: `../conf/`，ARM: `conf/`）。
+| 环境 | 工作目录 | 配置路径 | 原因 |
+|------|---------|---------|------|
+| X86 | `build/` | `../conf/` | 编译定义 `X86_BUILD` |
+| ARM (Jetson) | 项目根目录 | `conf/` | 嵌入式部署 |
+
+在其他目录运行会导致配置文件加载失败，日志、ZMQ、ModBus 等模块无法正常初始化。
 
 ## 关键依赖关系
 
