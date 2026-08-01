@@ -72,7 +72,9 @@ iec_message uartmanage SerialModule
 
 ## ZMQ 通信拓扑
 
-各模块通过 ZeroMQ P2P(发布/订阅) 模式通信，本节点为 `DOWNSIDE`（`tcp://127.0.0.1:5561`）：
+各模块通过 ZeroMQ P2P(发布/订阅) 模式通信，本节点为 `DOWNSIDE`（pub `tcp://127.0.0.1:5562`）：
+
+端口规则：配置文件基准端口 5561，各节点 pub 端口 = 基准 + 节点 id（DOWNSIDE=5562、WebServer=5563、QTServer=5564）：
 
 ```
 DOWNSIDE ──→ pub ──→ QTServer, WebServer
@@ -107,11 +109,11 @@ G500Bridge──→ pub ──→ QTServer
 
 **硬约束：X86 环境必须从 `build/` 目录执行程序**，因为 `#ifdef X86_BUILD` 下配置文件路径为 `../conf/`，该相对路径依赖于 `build/` 作为当前工作目录。
 
-**单进程约束：本项目只能有一个进程实例运行**。启动新程序前必须先 kill 旧进程，否则端口绑定（ZMQ 5561-5564）和 IPC 资源会冲突。
+**单进程约束：本项目只能有一个进程实例运行**。启动新程序前必须先 kill 旧进程，否则端口绑定（ZMQ pub 5562-5564 等）和 IPC 资源会冲突。
 
 ```bash
-# 启动前先杀旧进程
-pkill -f data_server 2>/dev/null; cd build && ./data_server &
+# 启动前先杀旧进程（注意用 -x 精确匹配进程名，-f 会误杀启动命令本身）
+pkill -x data_server 2>/dev/null; cd build && ./data_server &
 ```
 
 | 环境 | 工作目录 | 配置路径 | 原因 |

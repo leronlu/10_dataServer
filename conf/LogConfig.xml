@@ -10,7 +10,7 @@
     <LogSocketEnable>true</LogSocketEnable>
     <!--socket输出使能-->
     <CategorySocket>
-        <port>5588</port>
+        <port>5589</port>
     </CategorySocket>
     <PrintAppender>
         <layout>%d (%p) %x: %m%n</layout>
