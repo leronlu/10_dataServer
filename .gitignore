@@ -1,6 +1,8 @@
 # Build artifacts (keep CMakeLists.txt)
 build/*
 !build/CMakeLists.txt
+build_arm/*
+!build_arm/CMakeLists.txt
 *.o
 *.a
 

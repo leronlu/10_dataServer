@@ -29,10 +29,14 @@ build/CMakeLists.txt       CMake 构建配置（唯一纳入版本控制的 buil
 ### 编译
 
 ```bash
+# X86 桌面测试
 cd build && cmake . && make -j$(nproc)
+
+# ARM (Jetson) 部署（主循环 5ms，无 X86_BUILD 宏）
+cd build_arm && cmake . && make -j$(nproc)
 ```
 
-产物: `build/data_server`
+产物: `build/data_server`（X86）/ `build_arm/data_server`（ARM）
 
 ### 10_lib 链接组件
 
@@ -106,7 +110,7 @@ G500Bridge──→ pub ──→ QTServer
 
 ## 运行
 
-**硬约束：X86 环境必须从 `build/` 目录执行程序**，因为 `#ifdef X86_BUILD` 下配置文件路径为 `../conf/`，该相对路径依赖于 `build/` 作为当前工作目录。
+**硬约束：必须从构建目录执行程序**（`build/` 或 `build_arm/`），因为所有配置文件路径统一为 `../conf/`，依赖构建目录作为当前工作目录。
 
 **单进程约束：本项目只能有一个进程实例运行**。启动新程序前必须先 kill 旧进程，否则端口绑定（ZMQ pub 5562-5564 等）和 IPC 资源会冲突。
 
@@ -115,12 +119,12 @@ G500Bridge──→ pub ──→ QTServer
 pkill -x data_server 2>/dev/null; cd build && ./data_server &
 ```
 
-| 环境 | 工作目录 | 配置路径 | 原因 |
-|------|---------|---------|------|
-| X86 | `build/` | `../conf/` | 编译定义 `X86_BUILD` |
-| ARM (Jetson) | 项目根目录 | `conf/` | 嵌入式部署 |
+| 环境 | 工作目录 | 主循环 | 说明 |
+|------|---------|--------|------|
+| X86 | `build/` | 50ms | `X86_BUILD` 宏（CMake option 默认 ON） |
+| ARM (Jetson) | `build_arm/` | 5ms | `cmake -DX86_BUILD=OFF ..` 或 build_arm 默认 OFF |
 
-**ARM 构建注意**：部署 Jetson 时需移除/条件化 `build/CMakeLists.txt` 中的 `target_compile_definitions(data_server PRIVATE X86_BUILD)`（该宏仅控制日志路径与主循环休眠，X86 为 50ms / ARM 为 5ms）。
+**ARM 构建注意**：build_arm/CMakeLists.txt 与 build/ 同步维护，仅 `X86_BUILD` option 默认值不同（OFF）。X86_BUILD 宏仅控制主循环休眠（X86 为 50ms / ARM 为 5ms），配置路径两端统一为 `../conf/`。
 
 在其他目录运行会导致配置文件加载失败，日志、ZMQ、ModBus 等模块无法正常初始化。
 

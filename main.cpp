@@ -20,11 +20,7 @@ void onFrameDownSide1(vector<uint8_t> &data) {
 
 int main(int argc, const char * argv[]) {
     DebugLog *d_log = new DebugLog();
-#ifdef X86_BUILD
     d_log->initLogger("../conf/LogConfig.xml");
-#else
-    d_log->initLogger("conf/LogConfig.xml");
-#endif
     d_log->loadConfig();
     d_log->run();
 

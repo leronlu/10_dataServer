@@ -1,6 +1,8 @@
+# ARM (Jetson) build — keep in sync with ../build/CMakeLists.txt
+# Difference: X86_BUILD defaults OFF (5ms main loop; no X86 macro)
 cmake_minimum_required(VERSION 3.10)
 project(data_server LANGUAGES CXX C)
-option(X86_BUILD "X86 desktop build (50ms main loop)" ON)
+option(X86_BUILD "X86 desktop build (50ms main loop)" OFF)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE DEBUG)
