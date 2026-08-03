@@ -6,7 +6,6 @@
 
 ```
 conf/           XML 配置文件（串口、ModBus、ZMQ、日志、波束等 11 个）
-lib/            硬件驱动层（GPIO、按键、LCD1602 显示）
 mCommon/        公共模块（共享内存、系统消息、视频参数、文件操作）
 mFileManage/    文件管理模块
 mMinmea/        GPS NMEA 协议解析（基于 minmea C 库）
@@ -120,6 +119,8 @@ pkill -x data_server 2>/dev/null; cd build && ./data_server &
 |------|---------|---------|------|
 | X86 | `build/` | `../conf/` | 编译定义 `X86_BUILD` |
 | ARM (Jetson) | 项目根目录 | `conf/` | 嵌入式部署 |
+
+**ARM 构建注意**：部署 Jetson 时需移除/条件化 `build/CMakeLists.txt` 中的 `target_compile_definitions(data_server PRIVATE X86_BUILD)`（该宏仅控制日志路径与主循环休眠，X86 为 50ms / ARM 为 5ms）。
 
 在其他目录运行会导致配置文件加载失败，日志、ZMQ、ModBus 等模块无法正常初始化。
 
