@@ -32,7 +32,7 @@ build/CMakeLists.txt       CMake 构建配置（唯一纳入版本控制的 buil
 # X86 桌面测试
 cd build && cmake . && make -j$(nproc)
 
-# ARM (Jetson) 部署（主循环 5ms，无 X86_BUILD 宏）
+# ARM (Jetson) 部署
 cd build_arm && cmake . && make -j$(nproc)
 ```
 
@@ -52,7 +52,7 @@ iec_message uartmanage SerialModule
 
 - 所有依赖库已安装在 `/usr/local/lib/`（非标准路径）
 - CMakeLists.txt 中 `find_library` 会搜索系统默认路径和 `/usr/local/lib`
-- 编译定义 `X86_BUILD` 用于 x86 桌面测试环境
+- 两端构建完全一致（`X86_BUILD` 宏已移除，无平台差异）
 - 编译选项: `-Wall -g -fpermissive`，C++14 标准，Debug 构建
 
 ## 配置文件
@@ -121,10 +121,10 @@ pkill -x data_server 2>/dev/null; cd build && ./data_server &
 
 | 环境 | 工作目录 | 主循环 | 说明 |
 |------|---------|--------|------|
-| X86 | `build/` | 50ms | `X86_BUILD` 宏（CMake option 默认 ON） |
-| ARM (Jetson) | `build_arm/` | 5ms | `cmake -DX86_BUILD=OFF ..` 或 build_arm 默认 OFF |
+| X86 | `build/` | 50ms | 空转循环，仅保持进程存活 |
+| ARM (Jetson) | `build_arm/` | 50ms | 与 X86 相同，无平台差异 |
 
-**ARM 构建注意**：build_arm/CMakeLists.txt 与 build/ 同步维护，仅 `X86_BUILD` option 默认值不同（OFF）。X86_BUILD 宏仅控制主循环休眠（X86 为 50ms / ARM 为 5ms），配置路径两端统一为 `../conf/`。
+**ARM 构建注意**：build_arm/CMakeLists.txt 与 build/ 同步维护（内容相同，作为 ARM 部署入口）。配置路径两端统一为 `../conf/`，主循环为纯空转（50ms），所有业务均在独立线程，无平台差异。
 
 在其他目录运行会导致配置文件加载失败，日志、ZMQ、ModBus 等模块无法正常初始化。
 

@@ -50,11 +50,7 @@ int main(int argc, const char * argv[]) {
     sigaction(SIGINT, &sa, NULL);
 
     while(true){
-#ifdef X86_BUILD
         usleep(50000);
-#else
-        usleep(5000);
-#endif
     }
 
     return 0;
