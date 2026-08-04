@@ -117,8 +117,6 @@ public:
     void    stop();                                                             //析构所有子模块,用以动态配置加载
     BaseDataConfig getDataConfig();
     std::vector<DownSideConfig> & getDownSideConfig();                               //返回各个模块配置项                                         //返回主备指针
-	void setCallbackFunction(std::function<void(const uint8_t *, uint32_t)> func);
-	void setCallbackFunction(std::function<void(std::vector<uint8_t> &)> func);
 private:
     static void * processRoutine(void *arg);
 
@@ -224,8 +222,6 @@ private:
     //SoftVirtual         *d_softVirtual;                                         //处理额外数据  
 
     uint8_t               m_IEC104CommStat[NODE_COMM_IEC104];                     // 104通信状态缓存
-	std::function<void(const uint8_t *, uint32_t)> spectrumOnFrame;
-	std::function<void(std::vector<uint8_t> &)> spectrumOnFrame1;
 };
 
 #endif

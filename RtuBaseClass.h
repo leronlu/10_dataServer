@@ -43,14 +43,7 @@ enum EventType
     eventTypeDBUpdate,
     eventTypeDBRecord,
     eventTypeDBSetParam,
-    eventTypeModbusRead,
-    eventTypeSpectrum,
-    eventTypeBeam,
-    eventTypeWave,
-    eventTypePrpd,
-    eventTypeCRYBeam,
-    eventTypeCRYPrpd,
-    eventTypeCRYSpectrum
+    eventTypeModbusRead
 };
 
 //----------------------------------------
