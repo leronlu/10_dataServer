@@ -2403,19 +2403,6 @@ void DownSideDataModule::getSpontEvent()
                     sendManaulWaveEventMsg(event, childNo);
                     break;
                 }				
-				case eventTypeSpectrum:
-				case eventTypeBeam:
-				case eventTypeWave:
-				case eventTypePrpd:
-				{
-				#if 0
-					spectrumOnFrame(event.data.data, event.data.len);
-				#else
-					vector<uint8_t> data = std::vector<uint8_t>(event.data.data, event.data.data + event.data.len);
-					spectrumOnFrame1(data);
-				#endif //0
-					break;
-				}
                 default:
                     break;
             }
@@ -3249,29 +3236,5 @@ void DownSideDataModule::setVirtualData(const IecMessage &iecMsg)
             }
         }
     }
-}
-
-/*******************************************************************************
-@ Function Name     : setCallbackFunctionSpectrum
-@ Description       : 设置回调函数
-@ Input             : msg:消息内容
-@ Output            : None;
-@ Return            : None;
-*******************************************************************************/
-void DownSideDataModule::setCallbackFunction(std::function<void(const uint8_t *, uint32_t)> func)
-{
-	spectrumOnFrame = func;
-}
-
-/*******************************************************************************
-@ Function Name     : setCallbackFunctionSpectrum
-@ Description       : 设置回调函数
-@ Input             : msg:消息内容
-@ Output            : None;
-@ Return            : None;
-*******************************************************************************/
-void DownSideDataModule::setCallbackFunction(std::function<void(vector<uint8_t> &)> func)
-{
-	spectrumOnFrame1 = func;
 }
 

@@ -14,10 +14,6 @@ static void onSignal(int) {
     _exit(0);
 }
 
-void onFrameDownSide1(vector<uint8_t> &data) {
-    // reserved - callback used by DownSideDataModule
-}
-
 int main(int argc, const char * argv[]) {
     DebugLog *d_log = new DebugLog();
     d_log->initLogger("../conf/LogConfig.xml");
@@ -33,7 +29,6 @@ int main(int argc, const char * argv[]) {
 
     DownSideDataModule *d_downSideData = NULL;
     d_downSideData = new DownSideDataModule();
-    d_downSideData->setCallbackFunction(onFrameDownSide1);
     d_downSideData->initModule();
 
     BaseDataConfig m_dataConfig;
