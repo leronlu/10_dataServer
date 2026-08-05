@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DownSideDataConfig>
     <ModuleInstance>
-		<module id="20" enable="true" name="AC" confFile="../conf/ACConfig.xml"/>
+	    <module id="1" enable="true" name="AC" confFile="../conf/ACConfig.xml"/>
+            <module id="2" enable="true" name="Modbus" confFile="../conf/ModBusMasterConfig.xml"/>
+            <module id="3" enable="false" name="Minmea" confFile="../conf/MinmeaConfig.xml"/>
     </ModuleInstance>
     <LogicalModule>
         <module id="1" enable="false" name="JCW" confFile="./conf/JCWLogicalConfig.xml"/>

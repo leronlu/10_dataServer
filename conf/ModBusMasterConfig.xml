@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ModBusMasterConfig>
     <Serial>
+	<DevName>/dev/ttyS9</DevName>
         <Port>4</Port>
         <!--0/1/2/3-->
         <BaudRate>9600</BaudRate>
@@ -11,9 +12,9 @@
         <StopBits>1</StopBits>
         <!--1/2-->
     </Serial>
-    <PollingTime>1000</PollingTime>
+    <PollingTime>100</PollingTime>
     <!--轮询时间毫秒-->
-    <AckSendTime>300</AckSendTime>
+    <AckSendTime>100</AckSendTime>
     <!--Modubus应答延时发送插入帧时间 毫秒-->
     <ReceiveOverTime>2</ReceiveOverTime>
     <!--Modubus客户端抄表的接收超时时间秒-->
@@ -144,14 +145,21 @@
         <Factory/>
         <ReadRequest>
 			<frame type="doubleYx" funCode="02" startAddr="0x0000" regNum="3">
-				<data onBitIndex="1" onRegIndex="1" offBitIndex="2" offRegIndex="1"  THV="0"/>
+				<data onBitIndex="2" onRegIndex="1" offBitIndex="1" offRegIndex="1"  THV="0"/>
 			</frame>
-			<frame type="singleYx" funCode="02" startAddr="0x0000" regNum="4">
+			<frame type="singleYx" funCode="02" startAddr="0x0000" regNum="9">
 				<data bitIndex="3" THV="0" regIndex="1"/>
+				<data bitIndex="1" THV="0" regIndex="2"/>
+				<data bitIndex="8" THV="0" regIndex="1"/>
 			</frame>
-			<frame type="int32Yc" funCode="3" startAddr="0x4001" regNum="2">
-				<data regIndex="1" THV="5"/>
-				<data regIndex="2" THV="5"/>
+			<frame type="yc" funCode="3" startAddr="0x4000" regNum="7">
+				<data regIndex="1" THV="10"/>  	<!--直流电压值 -->
+				<data regIndex="2" THV="5"/>	<!--电池电量 -->
+				<data regIndex="3" THV="0"/>	<!--电池电量百分比 -->
+				<data regIndex="4" THV="10"/>	<!--流量计电量 -->
+				<data regIndex="5" THV="10"/>	<!--流量计电压 -->
+				<data regIndex="6" THV="50"/>	<!--流量计电流 -->
+				<data regIndex="7" THV="10"/>	<!--流量计温度 -->
 			</frame>
         </ReadRequest>
         <WriteRequest>
