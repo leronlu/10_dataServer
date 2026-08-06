@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FileManageConfig>
-    <WaveFile enable="true" dir="/mnt/wavedata/" namePrefilx="" fileSize="" maxnum="20">
+    <WaveFile enable="false" dir="/mnt/wavedata/" namePrefilx="" fileSize="" maxnum="20">
         <spontReport>false</spontReport>                                 <!--突发上报-->
     </WaveFile>
-    <WebWaveFile enable="true" dir="/mnt/webwavedata/" namePrefilx="" fileSize="" maxnum="20">
+    <WebWaveFile enable="false" dir="/mnt/webwavedata/" namePrefilx="" fileSize="" maxnum="20">
         <spontReport>true</spontReport>                                 <!--突发上报-->
     </WebWaveFile>
-    <SoeFile enable="true" dir="/mnt/files/" namePrefix="S" fileSize="64000" maxnum="5">
+    <SoeFile enable="false" dir="/mnt/files/" namePrefix="S" fileSize="64000" maxnum="5">
         <synchNum>10</synchNum>
         <spontReport>true</spontReport>
         <typeList>
@@ -29,7 +29,7 @@
         <synchNum>10</synchNum>
         <spontReport>true</spontReport>
     </ErrReportFile>
-	<VideoFile enable="true" dir="./snapshot/" namePrefix="2" fileSize="64000" maxnum="5">
+	<VideoFile enable="true" dir="/mnt/App/snapshot/" namePrefix="2" fileSize="64000" maxnum="5">
         <spontReport>false</spontReport>
     </VideoFile>
 </FileManageConfig>

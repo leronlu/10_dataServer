@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ACConfig>
-	<beamEnable>false</beamEnable>
+	<beamEnable>true</beamEnable>
 	<wavType>32</wavType>
 	<streamProc>0</streamProc>
 	<connect enable="true" ip="192.168.1.222" port="8888" netNum="3" timeOut="3" TestMode="false" />
 	
-	<pwmFilePath>/sys/class/pwm/pwmchip0/pwm2/duty_cycle</pwmFilePath>
+	<pwmFilePath>/sys/class/backlight/backlight-edp1/brightness</pwmFilePath>
 	
 	<tempFilePath>/sys/devices/virtual/thermal/thermal_zone0/temp</tempFilePath>
 	

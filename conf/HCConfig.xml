@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <HCConfig>
 	<Infrared>
-		<enable>false</enable>
-		<width>256</width>
-		<height>392</height>
-		<fps>25</fps>
+		<enable>true</enable>
+		<!--
+		<width>640</width>
+		<height>1032</height>
+		-->
+		<width>80</width>
+		<height>8221</height>
+		<fps>30</fps>
 		<pixfmt>YUY2</pixfmt>			<!--原始视频码流格式 -->
 		<pspixfmt>YUY2</pspixfmt>		<!--目标视频码流格式 -->
 		<pid>258</pid>
