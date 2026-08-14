@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 点表范围(2026-08-14 整理, 随 RTU IPC 15槽协议):
+     singleyx=4: AC 0(遥信下线) + Modbus D1 3 + 通信状态软遥信 1
+     doubleyx=1: Modbus D1 1
+     yc=22: AC 15(IPC 15槽) + Modbus D1 7
+     yk=3: Modbus D1 24576/24577/24578
+     ym=0: RTU 模板未实例化 -->
 <UpSideDataConfig>
 	<nodeList node="0" ip="127.0.0.1" enable="true">
 		<dataList type="singleyx">
-			<data addr="0"  mapaddr="0" num="130"/>
-		</dataList>	
+			<data addr="0"  mapaddr="0" num="4"/>
+		</dataList>
 		<dataList type="doubleyx">
 			<data addr="0"  mapaddr="0" num="1"/>
-		</dataList>	
+		</dataList>
 		<dataList type="yk">
 			<data addr="0"  mapaddr="0" num="3"/>
-		</dataList>	
+		</dataList>
 		<dataList type="yc">
-			<data addr="0"  mapaddr="0" num="139"/>
-		</dataList>	
+			<data addr="0"  mapaddr="0" num="22"/>
+		</dataList>
 		<dataList type="ym">
 			<data addr="0"  mapaddr="0" num="0"/>
-		</dataList>	
+		</dataList>
 		<dataList type="yt">
 			<data addr="0"  mapaddr="0" num="0"/>
 		</dataList>	
