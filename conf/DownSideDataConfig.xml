@@ -6,7 +6,7 @@
             <module id="3" enable="false" name="Minmea" confFile="../conf/MinmeaConfig.xml"/>
     </ModuleInstance>
     <LogicalModule>
-        <module id="1" enable="false" name="JCW" confFile="./conf/JCWLogicalConfig.xml"/>
+        <module id="1" enable="false" name="JCW" confFile="../conf/JCWLogicalConfig.xml"/>
     </LogicalModule>
     <NodeCommunicationYx>false</NodeCommunicationYx>
 </DownSideDataConfig>
