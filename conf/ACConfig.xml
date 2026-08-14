@@ -53,15 +53,26 @@
     <parseMode>1</parseMode>
   
 	<dataMsg>
+		<!-- RTU IPC 遥测 15 槽 (Issue #4, 2026-08-14): 槽位顺序须与 VideoFusionYcIndex 枚举一致,
+			 遥信已下线(原 128 路 yx1/128 路声压 yc1 删除), 数据源为 /tmp/rtumsg 消息队列 -->
 		<frame type="readData">
-			<data regIndex="1 " len="0x01" type="yx1"  defaultValue="0x00" repeat="128" desc="MP Status" />
-			<data regIndex="129" len="0x02" type="yc" defaultValue="60" repeat="1" desc="rainbow dot max" />
-			<data regIndex="130" len="0x02" type="yc" defaultValue="59" repeat="1" desc="rainbow dot min" />
-			<data regIndex="131" len="0x02" type="yc" defaultValue="1400" repeat="1" desc="capacity" />
-			<data regIndex="132" len="0x02" type="yc1" defaultValue="0x00" repeat="128" desc="MP1  Sound Pressure Level" />
-			<data regIndex="133" len="0x02" type="yc" defaultValue="40" repeat="1" desc="cpu temp" />
+			<data regIndex="0" len="0x02" type="yc" defaultValue="60" repeat="1" desc="rainbow dot max" />
+			<data regIndex="1" len="0x02" type="yc" defaultValue="59" repeat="1" desc="rainbow dot min" />
+			<data regIndex="2" len="0x02" type="yc" defaultValue="1400" repeat="1" desc="capacity" />
+			<data regIndex="3" len="0x02" type="yc" defaultValue="40" repeat="1" desc="cpu temp" />
+			<data regIndex="4" len="0x02" type="yc" defaultValue="0" repeat="1" desc="distant" />
+			<data regIndex="5" len="0x02" type="yc" defaultValue="0" repeat="1" desc="max pressure X" />
+			<data regIndex="6" len="0x02" type="yc" defaultValue="0" repeat="1" desc="max pressure Y" />
+			<data regIndex="7" len="0x02" type="yc" defaultValue="0" repeat="1" desc="min pressure X" />
+			<data regIndex="8" len="0x02" type="yc" defaultValue="0" repeat="1" desc="min pressure Y" />
+			<data regIndex="9" len="0x02" type="yc" defaultValue="0" repeat="1" desc="prpd type" />
+			<data regIndex="10" len="0x02" type="yc" defaultValue="0" repeat="1" desc="confidence" />
+			<data regIndex="11" len="0x02" type="yc" defaultValue="0" repeat="1" desc="LRQ" />
+			<data regIndex="12" len="0x02" type="yc" defaultValue="0" repeat="1" desc="leak" />
+			<data regIndex="13" len="0x02" type="yc" defaultValue="0" repeat="1" desc="gas economic loss" />
+			<data regIndex="14" len="0x02" type="yc" defaultValue="0" repeat="1" desc="energy economic loss" />
 		</frame>
-		
+
 		<frame type="readParam">
 			<data regIndex="6" value="0x00000000" type="INT32U" qpm="126" />
 			<data regIndex="7" value="0x00000001" type="INT32U" qpm="127"  />

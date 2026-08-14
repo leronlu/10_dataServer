@@ -152,8 +152,6 @@ private:
 	static void * 	runIPCProcess(void *arg);
 private:
 	bool 	processYcMsg(std::vector<uint16_t> pressure);
-	bool 	processYxMsg(std::vector<uint16_t> status);
-	bool 	processYxEvent(uint16_t dataOffset, uint8_t yxSt, int8_t* info, bool firstPool);
 	bool 	IPCProcess();
 private:
     virtual bool getDoubleYxSoe(DataSoe &soe);                                  //获取双点遥信
@@ -180,7 +178,7 @@ private:
     ACBaseAddr    		m_baseAddrOffset;
 	BaseDataConfig      m_baseDataConfig;
 private:
-	MRISEData           m_data;                                                 //数据表 
+	MRISEData           m_data;                                                 //数据表
 	STLDeque<DataSoe> 	m_singleYxSoeFifo;                                  //单点遥信SOE队列
     STLDeque<DataSoe>   m_doubleYxSoeFifo;                                  //双点遥信SOE队列
     STLDeque<DataSoe>   m_dYxSoeFifo;                                		//遥信SOE队列,用于触发向下发送查询soe数目帧

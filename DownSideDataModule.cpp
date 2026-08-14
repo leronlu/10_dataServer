@@ -26,6 +26,26 @@ using namespace std;
 #include <time.h>
 
 /*******************************************************************************
+@ Function Name     : soeTimeToString
+@ Description       : 将 IEC104 CP56Time2a 时间戳(7字节)格式化为 ISO 8601 字符串
+@                     编码: [0..1]毫秒(二进制LSB-first) [2]分 [3]时 [4]日(bit5=星期位)
+@                           [5]月 [6]年(0-99)
+@ Input             : dt: 7字节时间戳
+@ Output            : None
+@ Return            : ISO 8601 字符串, 如 "2026-08-14T05:54:27.195"
+*******************************************************************************/
+static std::string soeTimeToString(const uint8_t dt[7])
+{
+    int msec = (dt[1] << 8) | dt[0];
+    int year = dt[6] + 2000;
+
+    char buf[32] = {0};
+    snprintf(buf, sizeof(buf), "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+             year, dt[5], dt[4] & 0x1F, dt[3], dt[2], msec / 1000, msec % 1000);
+    return std::string(buf);
+}
+
+/*******************************************************************************
 @ Function Name     : DownSideDataModule
 @ Description       : 下行数据管理模块构造函数
 @ Input             : None
@@ -316,8 +336,6 @@ void DownSideDataModule::processMsg(void)
         IecMessage iecMsg; parseMessage(recvMsg.data1.data(), recvMsg.data1.size(), iecMsg);
         MsgData  msg;
         
-        printfsBuf(LOG_DEBUG, "------------>接收到消息\t:", recvMsg.data1.data(), recvMsg.data1.size());
-        
         msg.srcModuleName = m_moduleName;
         msg.dstModuleName = recvMsg.srcModuleName;
 
@@ -449,7 +467,8 @@ s = clock();
     getDoubleYxSoe(msg);
 
     if (m_timerYcPoll.CheckTimeOut())                                           //以固定时间轮询遥测
-    {      
+    {
+        printfs(LOG_DEBUG, "YC定时器块执行: sysTick=%lu", m_timerYcPoll.getTime());
         getValidYcCh(msg);
         getValidYcDcCh(msg);
         getFP32YcCh(msg);
@@ -521,8 +540,6 @@ void DownSideDataModule::sendMsg()
         sendMsg.dstNodeIp = m_msgManage.getThisNodeIp();
 
         m_msgManage.sendMsg(sendMsg);
-        printfsBuf(LOG_DEBUG, "<------------发送消息至%s %s\t:", sendMsg.data1.data(), sendMsg.data1.size(), 
-            sendMsg.dstNodeIp.c_str(), sendMsg.dstModuleName.c_str());
     }
 }
  
@@ -1450,8 +1467,7 @@ void DownSideDataModule::setGroupYt(const MsgData &msg, MsgData &ytMsg)
 
     printfs(LOG_DEBUG, "inf:%#x ngd:%d srcoffset:%d dstoffset:%d gingroup:%d ginindex:%d this=%#08x",
             ytinf, ytngd, ytsrcOffset, ytdstOffset, ytginGroup, ytginIndex, this);
-	printfsBuf(LOG_INFO,"msgData:",msg.data1.data(), msg.data1.size());
-	
+
     ytinf = msg.data1[YtGroupDataIdxINF];
     ytngd = msg.data1[YtGroupDataIdxNGD] & 0x3F;
     //ytsrcOffset   = YtGroupDataIdxCirLow;
@@ -1727,7 +1743,7 @@ void DownSideDataModule::getDoubleYxSoe(MsgData &msg)
         {
             iecMsg.units.push_back({soe.addr + confIt->baseAddr.doubleYxnum, {}});
             iecMsg.units.back().value.assign((uint8_t*)&soe.value, (uint8_t*)&soe.value + 1);
-            iecMsg.units.back().time.assign((const char*)soe.dateTime, 7);
+            iecMsg.units.back().time = soeTimeToString(soe.dateTime);
 
             if (++vsq >= YXSOE_PER_FRAME)
             {
@@ -1778,7 +1794,7 @@ void DownSideDataModule::getSingleYxSoe(MsgData &msg)
         {
             iecMsg.units.push_back({soe.addr + confIt->baseAddr.singleYxnum, {}});
             iecMsg.units.back().value.assign((uint8_t*)&soe.value, (uint8_t*)&soe.value + 1);
-            iecMsg.units.back().time.assign((const char*)soe.dateTime, 7);			
+            iecMsg.units.back().time = soeTimeToString(soe.dateTime);			
 
             if (++vsq >= YXSOE_PER_FRAME)
             {
@@ -1828,12 +1844,13 @@ void DownSideDataModule::getValidYcSoe(MsgData &msg)
 	 
         while ((*it)->getValidYcSoe(soe))
         {
+            printfs(LOG_DEBUG, "消费YC-SOE: addr=%d value=%d", soe.addr, soe.value);
             iecMsg.units.push_back({soe.addr+confIt->baseAddr.validYcnum, {}});
             elemt[0] = soe.value;
             elemt[1] = soe.value >> 8;
             elemt[2] = 0;
             iecMsg.units.back().value.assign(elemt, elemt + 3);
-            iecMsg.units.back().time.assign((const char*)soe.dateTime, 7);
+            iecMsg.units.back().time = soeTimeToString(soe.dateTime);
 
             if (++vsq >= YCSOE_PER_FRAME)
             {
@@ -1884,7 +1901,7 @@ void DownSideDataModule::getValidYcDcSoe(MsgData &msg)
             elemt[1] = soe.value >> 8;
             elemt[2] = 0;
             iecMsg.units.back().value.assign(elemt, elemt + 3);
-            iecMsg.units.back().time.assign((const char*)soe.dateTime, 7);
+            iecMsg.units.back().time = soeTimeToString(soe.dateTime);
 
             if (++vsq >= YCSOE_PER_FRAME)
             {
@@ -1941,7 +1958,7 @@ void DownSideDataModule::getFP32YcSoe(MsgData &msg)
             elemt[3] = value.bytes[3];
             elemt[4] = 0;
             iecMsg.units.back().value.assign(elemt, elemt + sizeof(elemt));
-            iecMsg.units.back().time.assign((const char*)soe.dateTime, 7);
+            iecMsg.units.back().time = soeTimeToString(soe.dateTime);
 
             if (++vsq >= FP32YCSOE_PER_FRAME)
             {
@@ -2468,6 +2485,7 @@ void DownSideDataModule::getDoubleYxData(MsgData &msg, uint8_t msgCOT)
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2522,12 +2540,13 @@ void DownSideDataModule::getSingleYxData(MsgData &msg, uint8_t msgCOT)
             addr ++;
             num  ++;
         }
-        
+
         if (vsq > 0)
         {
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2566,6 +2585,7 @@ void DownSideDataModule::getValidYcData(MsgData &msg, uint8_t msgCOT)
         {
             if (m_moduleList[i]->getValidYcData(num, value, change))
             {
+                printfs(LOG_DEBUG, "消费YC变位: module=%d addr=%d value=%d change=%d", i, num, value, change);
                 element[0] = value & 0xFF;
                 element[1] = value >> 8;
                 element[2] = 0;
@@ -2587,12 +2607,13 @@ void DownSideDataModule::getValidYcData(MsgData &msg, uint8_t msgCOT)
             addr ++;
             num  ++;
         }
-        
+
         if (vsq > 0)
         {
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2652,12 +2673,13 @@ void DownSideDataModule::getValidYtData(MsgData &msg, uint8_t msgCOT)
             addr ++;
             num  ++;
         }
-        
+
         if (vsq > 0)
         {
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2715,12 +2737,13 @@ void DownSideDataModule::getValidYcDcData(MsgData &msg, uint8_t msgCOT)
             addr ++;
             num  ++;
         }
-        
+
         if (vsq > 0)
         {
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2780,12 +2803,13 @@ void DownSideDataModule::getFP32YcData(MsgData &msg, uint8_t msgCOT)
             addr ++;
             num  ++;
         }
-        
+
         if (vsq > 0)
         {
             /* iecMsg VSQ = units.size() */
             { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }
             sendMsg(msg);
+            iecMsg.units.clear();
         }
     }
 }
@@ -2854,7 +2878,7 @@ void DownSideDataModule::sendYkEventMsg(SpontEvent &event, int8_t childNo, Table
         dateTime[2] = time.m_min;
         dateTime[1] = (time.m_sec * 1000 + time.m_msec) >> 8;
         dateTime[0] = (time.m_sec * 1000 + time.m_msec);
-        iecMsg.units.back().time.assign((const char*)dateTime, 7);
+        iecMsg.units.back().time = soeTimeToString(dateTime);
     }
     
     { auto _p = packMessage(iecMsg); msg.data1 = std::move(_p); }

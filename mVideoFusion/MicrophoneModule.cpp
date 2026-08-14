@@ -1,6 +1,7 @@
 #include <unistd.h>
 using namespace std;
 #include <sys/syscall.h>
+#include <sys/stat.h>
 #include "MicrophoneModule.h"
 
 MicrophoneModule::MicrophoneModule(const string &confFileName){
@@ -88,7 +89,7 @@ void MicrophoneModule::initConfig(){
 				
 				f_XmlNodeParser.GetProperty((int8_t*)"type", text);
 				RISERcvRegType type = getRcvRegType((char *)text);
-				memset(text, 0, sizeof(text));
+				//memset(text, 0, sizeof(text));
 				//f_XmlNodeParser.GetProperty((int8_t*)"desc", text);
 				//memcpy(rcvReg.desc, text, sizeof(text));
 
@@ -216,9 +217,17 @@ void * MicrophoneModule::runIPCProcess(void * arg){
 }
 bool MicrophoneModule::IPCProcess(){
 	int id = (int)IPCMsgType::RTU;
-	int msgid = getIPCMsg(id, "/tmp/rtumsg");		
+	int msgid = getIPCMsg(id, "/tmp/rtumsg");
     //int cnt = 0;
     RTUMessage message;
+
+    //启动检测:外部声学采集进程未运行时, 声压数据将保持默认值
+    struct stat rtumsgStat;
+    if (stat("/tmp/rtumsg", &rtumsgStat) != 0){
+        printfs(LOG_WARNING, "IPC消息队列文件/tmp/rtumsg不存在, 声学采集进程可能未运行, 声压数据将保持默认值");
+    }else{
+        printfs(LOG_INFO, "IPC消息队列文件/tmp/rtumsg存在, 等待声学数据");
+    }
 
     while(true){
         usleep(100*1000);
@@ -227,9 +236,8 @@ bool MicrophoneModule::IPCProcess(){
         	continue;
         }
         //std::cout << "cnt: " << cnt++ << std::endl;
-        std::vector<uint16_t> yx(message.data, message.data + 128);
-		processYxMsg(yx);
-		std::vector<uint16_t> yc(&(message.data[128]), &message.data[128] + 128);
+        //RTU IPC 协议(2026-08-14, Issue #4): 15 槽纯遥测, 槽序=VideoFusionYcIndex, 遥信已下线
+        std::vector<uint16_t> yc(message.data, message.data + YcIndexCount);
 		processYcMsg(yc);
         //process(b, 48000, 20000);
      }
@@ -240,7 +248,7 @@ bool MicrophoneModule::IPCProcess(){
 bool MicrophoneModule::processYcMsg(vector<uint16_t> pressure){
 	 // 遍历vector v并对每个元素进行赋值
     for(int i = 0; i < (int)pressure.size(); i++){
-		uint16_t addr = i;
+		uint16_t addr = i;                                                      //15槽直映射: 槽序=VideoFusionYcIndex
 	    uint16_t ycValue = (uint16_t)(pressure[i]);
 
 		if(addr < m_data.Yc.size()){
@@ -251,48 +259,6 @@ bool MicrophoneModule::processYcMsg(vector<uint16_t> pressure){
 		}
 	}
 	return true;
-}
-
-bool MicrophoneModule::processYxMsg(vector<uint16_t> status){
-	 for(int i = 0; i < (int)status.size(); i++){
-	 	uint16_t addr = i;
-		processYxEvent(addr, status[i], (int8_t*)"", false);
-	 }
-	 return true;
-}
-
-bool MicrophoneModule::processYxEvent(uint16_t dataOffset, uint8_t yxSt, 
-	int8_t* info, bool firstPool){
-    uint8_t THV   = 0;
-    //static uint8_t yxSt  = 0;													//地线初始状态为取出
-    vector<uint16_t>     rdYx;
-    vector<DataINT8UNew> *yxdata = NULL;
-    //STLDeque<DataSoe> *yxsoefifo = NULL;
-    //char   info[5] = "";
-    uint16_t addr    = 0;
-    //printfs(LOG_DEBUG, "进入遥信数据解析");
-
-	bool bitChangeFlags = false;
-
-	yxdata     = &m_data.singleYx;
-    //sprintf(info, "单点");
- 
-    addr = dataOffset + 0;
-
-    if (mAbs(yxSt, yxdata->at(addr).value) > THV){
-        if (!firstPool) {
-			putSoeToFifo(addr, yxSt, m_singleYxSoeFifo);
-			bitChangeFlags = true;
-        }
-        yxdata->at(addr).change = true;                                 		//一级变位
-	}
-	
-    yxdata->at(addr).value = yxSt;
-    if (yxdata->at(addr).change) {
-        printfs(LOG_WARNING, "描述:%s, 单点遥信变位: 地址=%d 状态=%d\n", 
-                        info, addr, yxSt);
-    }
-	return bitChangeFlags;
 }
 	
 bool MicrophoneModule::getDoubleYxSoe(DataSoe &soe){
